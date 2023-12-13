@@ -4,8 +4,8 @@ spring:
   profiles:
     active: local
   datasource:
-    username: ${POSTGRES_USERNAME}
-    password: ${POSTGRES_PASSWORD}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:passw0rd}
     url: jdbc:postgresql://localhost:5432/postgres
   jpa:
     hibernate:
