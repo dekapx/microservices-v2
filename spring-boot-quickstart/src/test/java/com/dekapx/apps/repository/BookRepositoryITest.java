@@ -23,13 +23,15 @@ public class BookRepositoryITest {
 
     @Test
     public void shouldReturnAllBooks() {
+        String title = "Clean Code";
         List<Book> books = new ArrayList<>();
         this.repository.findAll().forEach(books::add);
         assertThat(books)
                 .isNotNull()
                 .isNotEmpty()
                 .hasAtLeastOneElementOfType(Book.class)
-                .filteredOn(c -> !c.getAuthor().isEmpty());
+                .extracting(Book::getTitle)
+                .contains(title);
     }
 
     @Test
@@ -40,5 +42,19 @@ public class BookRepositoryITest {
                 .isNotNull()
                 .satisfies(o ->
                         assertThat(o.getId().getIsbn()).isEqualTo(isbn));
+    }
+
+    @Test
+    public void shouldFindBookByAuthor() {
+        String author = "Martin Fowler";
+        List<Book> books = this.repository.findByAuthor(author);
+        assertThat(books)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1)
+                .hasAtLeastOneElementOfType(Book.class)
+                .extracting(Book::getAuthor)
+                .contains(author);
+        ;
     }
 }
