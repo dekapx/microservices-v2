@@ -43,6 +43,15 @@ public class BookRepositoryITest {
                 .satisfies(o ->
                         assertThat(o.getId().getIsbn()).isEqualTo(isbn));
     }
+    @Test
+    public void shouldFindBookByIsbn2() {
+        String isbn = "1234-ABC-456";
+        Book book = this.repository.findByIsbn(isbn);
+        assertThat(book)
+                .isNotNull()
+                .satisfies(o ->
+                        assertThat(o.getId().getIsbn()).isEqualTo(isbn));
+    }
 
     @Test
     public void shouldFindBookByAuthor() {
