@@ -12,7 +12,7 @@ public class CompletableFutureDemo {
         });
 
         future.thenAccept(result -> stepTwo(result));
-        future.get();
+        future.join();
     }
 
     private static List<String> stepOne() {

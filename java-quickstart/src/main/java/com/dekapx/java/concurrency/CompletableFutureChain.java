@@ -9,7 +9,6 @@ public class CompletableFutureChain {
                 .thenApplyAsync(result -> add(result, 5));
 
         future.thenAccept(result -> print(result));
-        future.join();
     }
 
     private static Integer add(Integer arg, Integer value) {
