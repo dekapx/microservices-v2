@@ -1,7 +1,6 @@
 package com.dekapx.apps.repository;
 
 import com.dekapx.apps.entity.Customer;
-import com.dekapx.apps.model.Status;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.dekapx.apps.repository.CustomerTestData.*;
+import static com.dekapx.apps.model.Status.ACTIVE;
+import static com.dekapx.apps.model.Status.INACTIVE;
+import static com.dekapx.apps.repository.CustomerTestData.FIRST_NAME;
+import static com.dekapx.apps.repository.CustomerTestData.LAST_NAME;
+import static com.dekapx.apps.repository.CustomerTestData.createCustomer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -45,7 +48,7 @@ public class CustomerRepositoryITest {
                 .satisfies(c -> {
                     assertThat(c.getFirstName()).isEqualTo(FIRST_NAME);
                     assertThat(c.getLastName()).isEqualTo(LAST_NAME);
-                    assertThat(c.getStatus()).isEqualTo(Status.ACTIVE);
+                    assertThat(c.getStatus()).isEqualTo(ACTIVE);
                 });
 
     }
@@ -58,7 +61,19 @@ public class CustomerRepositoryITest {
                 .isNotNull()
                 .isNotEmpty()
                 .hasAtLeastOneElementOfType(Customer.class)
-                .filteredOn(c -> c.getStatus().equals(Status.ACTIVE))
-                .extracting(Customer::getFirstName).contains("Test");
+                .filteredOn(c -> c.getStatus().equals(ACTIVE))
+                .extracting(Customer::getFirstName).contains(FIRST_NAME);
+    }
+
+    @Test
+    public void shouldReturnCustomerWhenFindByStatus() {
+        List<Customer> customers = this.repository.findByStatus(INACTIVE);
+        assertThat(customers)
+                .isNotNull()
+                .isNotEmpty()
+                .hasAtLeastOneElementOfType(Customer.class)
+                .filteredOn(c -> c.getStatus().equals(INACTIVE))
+                .extracting(Customer::getStatus)
+                .contains(INACTIVE);
     }
 }

@@ -1,6 +1,8 @@
 spring:
+  main:
+    allow-circular-references: true
   application:
-    name: spring-boot-quickstart
+    name: spring-boot-batch
   profiles:
     active: local
   datasource:
@@ -14,6 +16,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
+batch:
+  jdbc:
+    schema: classpath:org/springframework/batch/core/schema-postgresql.sql
+    initialize-schema: always
+  job:
+    enabled: false
 server:
   port: ${SERVER_PORT:8081}
   servlet:
