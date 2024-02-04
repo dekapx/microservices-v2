@@ -12,44 +12,39 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dekapx.apps.repository.CustomerTestData.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class CustomerRepositoryITest {
-    @Autowired
     private CustomerRepository repository;
+
+    @Autowired
+    public CustomerRepositoryITest(CustomerRepository repository) {
+        this.repository = repository;
+    }
 
     @BeforeEach
     public void setup() {
-        Customer customer = Customer.builder()
-                .firstName("Test")
-                .lastName("User")
-                .phone("+1 123 456 7890")
-                .email("test.user@google.com")
-                .status(Status.ACTIVE)
-                .build();
+        Customer customer = createCustomer();
         this.repository.save(customer);
     }
 
     @AfterEach
-    public void teardown() {
-        Customer customer = repository.findByFirstName("Test");
+    public void cleanUp() {
+        Customer customer = repository.findByFirstNameAndLastName(FIRST_NAME, LAST_NAME);
         this.repository.delete(customer);
-    }
-
-    @Autowired
-    public CustomerRepositoryITest(final CustomerRepository repository) {
-        this.repository = repository;
     }
 
     @Test
     public void shouldReturnCustomerWhenFindByFirstName() {
-        Customer customer = this.repository.findByFirstName("Test");
+        Customer customer = this.repository.findByFirstNameAndLastName(FIRST_NAME, LAST_NAME);
         assertThat(customer)
                 .isNotNull()
                 .satisfies(c -> {
-                    assertThat(c.getFirstName()).isEqualTo("Test");
+                    assertThat(c.getFirstName()).isEqualTo(FIRST_NAME);
+                    assertThat(c.getLastName()).isEqualTo(LAST_NAME);
                     assertThat(c.getStatus()).isEqualTo(Status.ACTIVE);
                 });
 
